@@ -13,7 +13,7 @@ function Get-Part1 ($inputs)
     }
     return $total
 }
-function Get-Part2 ($input)
+function Get-Part2 ($inputs)
 {
     $totalribbon = 0
     foreach ($present in $inputs)
