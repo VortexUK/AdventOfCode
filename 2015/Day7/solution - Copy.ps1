@@ -1,4 +1,4 @@
-﻿$in = Get-Content "C:\Users\Ben\SkyDrive\Documents\PowerShellChallenge\Day-7_input.txt"
+﻿$in = get-content -Path "D:\git\AdventOfCode\2015\Day7\input.txt"
 
 $values = @{}
 
@@ -12,9 +12,9 @@ foreach ($i in $first)
 $noend = $true
 $currentvalues = $values
 $remaininginstructions = $in | Where {$_ -notin $first}
+$count = 0
 while ($noend)
 {
-    $regexmatcher = $currentvalues.GetEnumerator().Name -join '|'
     $mainmatcher = $values.GetEnumerator().Name -join '|'
     $instructionround = $remaininginstructions | ? {$_ -match "^((([0-9]+|$mainmatcher) (AND|OR|LSHIFT|RSHIFT)) ([0-9]+|$mainmatcher)|NOT ($mainmatcher)|([0-9]+|$mainmatcher)) ->"}
     $previousinstructions = $instructionround
@@ -34,7 +34,7 @@ while ($noend)
         }
         $values.$out = $result
         $currentvalues.$out = $result
-        
+        $count++
         if ($out -eq 'a' -and $values.'a' -ne 0) {$noend = $false}
     }
     $remaininginstructions = $remaininginstructions | Where {$_ -notin $previousinstructions}
