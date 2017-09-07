@@ -49,7 +49,7 @@ Function Initialise-Circuit ($StartingInputs)
     }
     return $CircuitValues
 }
-function Get-Part1
+function Get-Part1 ($inputs)
 {
     [System.Collections.ArrayList]$formattedinputs = Get-FormattedInputs -inputs $inputs
     $StartingInputs = $formattedinputs | Where {$_.Operation -eq "START"}
