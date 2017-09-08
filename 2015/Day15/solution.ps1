@@ -20,18 +20,19 @@ function Format-Inputs ($inputs)
     }
     return $Ingredients
 }
-function Get-Product ($a) {
-    if ($a.Length -eq 0) {
+function Get-Product ($Values) {
+    if ($Values.Length -eq 0) {
         return 0
     }
-    $s = $a -join '*'
-    return (Invoke-Expression $s)
+    $expression = $Values -join '*'
+    return (Invoke-Expression $expression)
 }
 $Ingredients = Format-Inputs -inputs $inputs
 function Get-Part1 ($Ingredients)
 {
     $bestcombo = 0
-    for ($i = 0;$i -lt 100;$i--)
+    $IngredientProperties = $Ingredients[0].Properties.GetEnumerator().name | Where {$_ -ne 'calories'}
+    for ($i = 0;$i -lt 100;$i++)
     {
         for($j = 0; $j -lt (100-$i);$j++)
         {
@@ -40,7 +41,7 @@ function Get-Part1 ($Ingredients)
                 $badcombo = $false
                 $l = 100-$i-$j-$k
                 $propertyvalues = @()
-                foreach ($property in $Ingredients[0].Properties.GetEnumerator().name)
+                foreach ($property in $IngredientProperties)
                 {
                     if(!$badcombo)
                     {
@@ -58,7 +59,6 @@ function Get-Part1 ($Ingredients)
                     if ($bestcombo -lt $result)
                     {
                         $bestcombo = $result
-                        $result
                     }
                 }
             }
@@ -66,8 +66,47 @@ function Get-Part1 ($Ingredients)
     }
     return $bestcombo
 }
-function Get-Part2 ($inputs)
+function Get-Part2 ($Ingredients)
 {
+    $bestcombo = 0
+    $IngredientProperties = $Ingredients[0].Properties.GetEnumerator().name | Where {$_ -ne 'calories'}
+    for ($i = 0;$i -lt 100;$i++)
+    {
+        for($j = 0; $j -lt (100-$i);$j++)
+        {
+            for($k =0;$k -lt (100-($i +$j));$k++)
+            {
+                $badcombo = $false
+                $l = 100-$i-$j-$k
+                $propertyvalues = @()
+                $Calories = ($Ingredients[0].Properties.Calories * $i) + ($Ingredients[1].Properties.Calories * $j) + ($Ingredients[2].Properties.Calories * $k) + ($Ingredients[3].Properties.Calories * $l)
+                if ($Calories -eq 500)
+                {    
+                    foreach ($property in $IngredientProperties)
+                    {
+                        if(!$badcombo)
+                        {
+                            $PropertyValue = ($Ingredients[0].Properties.$property * $i) + ($Ingredients[1].Properties.$property * $j) + ($Ingredients[2].Properties.$property * $k) + ($Ingredients[3].Properties.$property * $l)
+                            if ($PropertyValue -le 0)
+                            {
+                                $Badcombo = $true
+                            }
+                            $propertyvalues += $PropertyValue
+                        }
+                    }
+                    if (!$badcombo)
+                    {
+                        $Result = Get-Product -Values $propertyvalues
+                        if ($bestcombo -lt $result)
+                        {
+                            $bestcombo = $result
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $bestcombo
 }
 Get-Part1 -Ingredients $Ingredients
-Get-Part2 -inputs $inputs
+Get-Part2 -Ingredients $Ingredients
