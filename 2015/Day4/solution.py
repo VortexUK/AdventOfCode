@@ -1,6 +1,11 @@
 import hashlib
 
 
+def file_get_contents(filename):
+    with open(filename) as f:
+        return f.read()
+
+
 def find_five_zeros(starter):
     i = 0
     while not m.hexdigest().startswith("00000"):
@@ -19,5 +24,6 @@ def find_six_zeros(starter):
     print m.hexdigest()
 
 
-find_five_zeros("ckczppom")
-find_six_zeros("ckczppom")
+inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day3.txt")
+find_five_zeros(inp)
+find_six_zeros(inp)
