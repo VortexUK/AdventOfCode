@@ -18,6 +18,7 @@ def get_next_password(current_password):
         new_password = get_next_password("".join(password_split[0:last_char_index])) + "a"
     return new_password
 
+
 def get_next_valid_password (starting_password):
     first_rule = r"[^iol]"
     second_rule = r"(.)\1.*(.)\2"
@@ -34,6 +35,6 @@ def get_next_valid_password (starting_password):
 
 
 inp = (file_get_contents(cwd + "\input.txt"))[0]
-nextpassword = get_next_valid_password(inp)
-print nextpassword
-print get_next_valid_password(nextpassword)
+next_password = get_next_valid_password(inp)
+print next_password
+print get_next_valid_password(next_password)
