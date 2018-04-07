@@ -61,6 +61,7 @@ def get_part_b(distances_unformatted):
             worst_route = current_route_length
     print worst_route
 
+
 inp = file_get_contents(cwd + "\input.txt")
 get_part_a(inp)
 get_part_b(inp)
