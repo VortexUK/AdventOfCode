@@ -6,7 +6,11 @@ function Get-Part1 ($inputs)
     $actualstrings = @()
     foreach ($string in $inputs)
     {
-        $actualstrings += ((($string -replace $escapes[0],'a') -replace $escapes[1],'b') -replace $escapes[2],'c') -replace '"'
+        $actualstrings += ((($string -replace $escapes[0],'a') -replace $escapes[1],'b') -replace $escapes[2],'c') -replace '^"|"$'
+    }
+    foreach ($string in $actualstrings)
+    {
+        $string.length
     }
     $stringsize = (($actualstrings -join '') -split '' | measure).Count
     $inputsize = (($inputs -join '') -split '' | measure).Count
