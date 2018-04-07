@@ -1,4 +1,6 @@
 import re
+import os
+cwd = os.getcwd()
 
 
 def file_get_contents(filename):
@@ -65,7 +67,7 @@ def run_instructions(instructions, mode):
     print sum(sum(light_grid, []))
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day6.txt")
+inp = file_get_contents(cwd + "\input.txt")
 run_instructions(inp, 1)
 run_instructions(inp, 2)
 

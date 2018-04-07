@@ -1,4 +1,6 @@
 from collections import Counter
+import os
+cwd = os.getcwd()
 
 
 def file_get_contents(filename):
@@ -46,6 +48,6 @@ def deliver_presentsrobo(directions):
     print len(cnt)
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day3.txt")
+inp = file_get_contents(cwd + "\input.txt")
 deliver_presents(inp)
 deliver_presentsrobo(inp)

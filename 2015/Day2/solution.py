@@ -1,3 +1,7 @@
+import os
+cwd = os.getcwd()
+
+
 def file_get_contents(filename):
     with open(filename) as f:
         return [_.strip('\n') for _ in f.readlines()]
@@ -39,6 +43,6 @@ def get_required_ribbon(input):
     return total_footage
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day2.txt")
+inp = file_get_contents(cwd + "\input.txt")
 print get_required_paper(inp)
 print get_required_ribbon(inp)

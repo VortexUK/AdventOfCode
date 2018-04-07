@@ -1,3 +1,7 @@
+import os
+cwd = os.getcwd()
+
+
 def file_get_contents(filename):
     with open(filename) as f:
         return f.read()
@@ -25,6 +29,6 @@ def get_basement_floor_index(input):
             return index
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\input.txt")
+inp = file_get_contents(cwd + "\input.txt")
 print count_brackets(inp)
 print get_basement_floor_index(inp)

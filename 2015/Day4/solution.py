@@ -1,4 +1,6 @@
 import hashlib
+import os
+cwd = os.getcwd()
 
 
 def file_get_contents(filename):
@@ -24,6 +26,6 @@ def find_six_zeros(starter):
     print m.hexdigest()
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day3.txt")
+inp = file_get_contents(cwd + "\input.txt")
 find_five_zeros(inp)
 find_six_zeros(inp)

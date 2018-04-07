@@ -1,4 +1,6 @@
 import re
+import os
+cwd = os.getcwd()
 
 
 def file_get_contents(filename):
@@ -30,6 +32,6 @@ def test_string2(string_input):
     print len(nice_strings)
 
 
-inp = file_get_contents("S:\Prod\AdventOfCode\BenM\PyCharm\Day5.txt")
+inp = file_get_contents(cwd + "\input.txt")
 test_string(inp)
 test_string2(inp)
