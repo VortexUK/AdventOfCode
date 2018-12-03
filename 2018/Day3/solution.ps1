@@ -1,34 +1,34 @@
-﻿$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day3\input.txt
-$formattedinput = $inp | Select-Object -Property @{N='Claim'; E = {[System.Int32](($_ -split ' ')[0] -replace '#')}},
+﻿[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day3\input.txt
+[System.Collections.ArrayList]$formattedinput = $inp | Select-Object -Property @{N='Claim'; E = {[System.Int32](($_ -split ' ')[0] -replace '#')}},
                                 @{N='XStart'; E = {[System.Int32]($_ -split ' |,')[2]}},
                                 @{N='YStart'; E = {[System.Int32]($_ -split ' |,' -replace ':')[3]}},
                                 @{N='XLength'; E = {[System.Int32]($_ -split ' |x' -replace ':')[3]}},
                                 @{N='YLength'; E = {[System.Int32]($_ -split ' |x' -replace ':')[4]}}
 #region Part 1
-$Fabric = New-Object 'object[,]' 1100,1100
-foreach ($claim in $formattedinput)
+[System.Object[,]]$Fabric = New-Object -TypeName 'object[,]' -ArgumentList 1100,1100
+foreach ($Claim in $FormattedInput)
 {
-    $xend = $claim.xstart + $claim.xlength
-    $yend = $claim.ystart + $claim.ylength
-    for ($x = $claim.xstart; $x -lt $xend; $x++)
+    [System.Int32]$XEnd = $Claim.XStart + $Claim.XLength
+    [System.Int32]$YEnd = $Claim.YStart + $Claim.YLength
+    for ($x = $Claim.XStart; $x -lt $XEnd; $x++)
     {
-        for ($y = $claim.ystart;$y -lt $yend; $y++)
+        for ($y = $Claim.YStart;$y -lt $YEnd; $y++)
         {
             $Fabric[$x,$y] += 1
         }
     }
 }
-$Part1 = ($Fabric2 | Where-Object -FilterScript {$_ -gt 1} | Measure-Object).Count
+[System.Int32]$Part1 = ($Fabric | Where-Object -FilterScript {$_ -gt 1} | Measure-Object).Count
 #endregion
 #region Part 2
-foreach ($claim in $formattedinput)
+foreach ($Claim in $FormattedInput)
 {
-    $xend = $claim.xstart + $claim.xlength
-    $yend = $claim.ystart + $claim.ylength
-    $Overlapping = $false
-    for ($x = $claim.xstart; $x -lt $xend; $x++)
+    [System.Int32]$XEnd = $Claim.XStart + $Claim.XLength
+    [System.Int32]$YEnd = $Claim.YStart + $Claim.YLength
+    [System.Boolean]$Overlapping = $false
+    for ($x = $Claim.XStart; $x -lt $XEnd; $x++)
     {
-        for ($y = $claim.ystart;$y -lt $yend; $y++)
+        for ($y = $Claim.YStart;$y -lt $YEnd; $y++)
         {
             if ($Fabric2[$x,$y] -gt 1)
             {
@@ -38,9 +38,9 @@ foreach ($claim in $formattedinput)
     }
     if ($Overlapping -eq $false)
     {
-        $Part2 = $Claim.Claim
+        [System.Int32]$Part2 = $Claim.Claim
     }
 }
 #endregion
-Write-Host "Answer to Part 1: $Part1"
-Write-Host "Answer to Part 2: $Part2"
+Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow

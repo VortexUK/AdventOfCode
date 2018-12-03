@@ -1,41 +1,40 @@
-﻿$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day2\input.txt
+﻿[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day2\input.txt
 #region Part 1
-$2count = 0
-$3count = 0
-foreach ($string in $inp)
+[System.Int32]$2Count = 0
+[System.Int32]$3Count = 0
+foreach ($String in $inp)
 {
-    $lettercounts = $string -split '' | ? {$_ -match '.'} |Group-Object
-    if (($lettercounts | Where-Object -Property Count -eq 2 | Measure-Object).Count -gt 0)
+    $LetterCounts = $String.ToCharArray() | Group-Object
+    if (($LetterCounts | Where-Object -Property Count -eq 2 | Measure-Object).Count -gt 0)
     {
         $2count++
     }
-    if (($lettercounts | Where-Object -Property Count -eq 3 | Measure-Object).Count -gt 0)
+    if (($LetterCounts | Where-Object -Property Count -eq 3 | Measure-Object).Count -gt 0)
     {
         $3count++
     }
 }
-$Part1 = $2count * $3count
+[System.Int32]$Part1 = $2count * $3count
 #endregion
 #region Part 2
-$stringlength = $formattedlist[0].length
-:mainloop foreach ($sortedstring in $inp)
+[System.Int32]$StringLength = $formattedlist[0].length
+:mainloop foreach ($string in $inp)
 {
-    :testloop foreach ($teststring in ($inp | Where-object {$_ -ne $sortedstring}))
+    :testloop foreach ($TestString in ($inp | Where-object {$_ -ne $string}))
     {
-        $diffcount = 0
-        $diffletters = ""
-        for ($i = 0; $i -lt $stringlength; $i++)
+        [System.Int32]$DiffCount = 0
+        for ($i = 0; $i -lt $StringLength; $i++)
         {
-            if ($sortedstring[$i] -ne $teststring[$i])
+            if ($string[$i] -ne $teststring[$i])
             {
-                $diffcount += 1
+                $DiffCount += 1
                 $index = $i
             }
         }
-        if ($diffcount -eq 1)
+        if ($DiffCount -eq 1)
         {
-            [System.Collections.ArrayList]$letters = $sortedstring -split '' | Where {$_ -match '.'}
-            $null = $letters.RemoveAt($index)
+            [System.Collections.ArrayList]$Letters = $string.ToCharArray()
+            $null = $Letters.RemoveAt($index)
             $Part2 = $Letters -join ''
             break mainloop
         }
@@ -43,5 +42,5 @@ $stringlength = $formattedlist[0].length
 }
 
 #endregion
-Write-Host "Answer to Part 1: $Part1"
-Write-Host "Answer to Part 2: $Part2"
+Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
