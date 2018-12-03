@@ -30,7 +30,7 @@ foreach ($Claim in $FormattedInput)
     {
         for ($y = $Claim.YStart;$y -lt $YEnd; $y++)
         {
-            if ($Fabric2[$x,$y] -gt 1)
+            if ($Fabric[$x,$y] -gt 1)
             {
                 $Overlapping = $true
             }

@@ -8,7 +8,7 @@
 [System.Collections.Hashtable]$NumberHash = @{}
 while (!$FrequencyFound)
 {
-    :frequencyloop foreach ($Numbers in $Numbers)
+    :frequencyloop foreach ($Number in $Numbers)
     {
         $currentsum += $number
         $numberhash.$currentsum += 1
