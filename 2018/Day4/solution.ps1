@@ -1,9 +1,9 @@
-﻿$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day4\input.txt
+﻿[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day4\input.txt
 # Add 1 hour to all times, which removes the annoyance of shifts starting on a 'different day'
-$formattedinputpart1 = $inp | Select-Object -Property @{N="Date";E = {([System.DateTime](($_ -split '\]')[0] -replace '\[')).AddHours(1)}},
+[System.Collections.ArrayList]$formattedinputpart1 = $inp | Select-Object -Property @{N="Date";E = {([System.DateTime](($_ -split '\]')[0] -replace '\[')).AddHours(1)}},
                                                 @{N="Action"; E = {($_ -split '\]')[1].Trim()}} | Sort-Object -Property Date
-$DaysOfLog = $formattedinputpart1.date.date | select -Unique
-$GuardLog = @()
+[System.Collections.ArrayList]$DaysOfLog = $formattedinputpart1.date.date | Select-Object -Unique
+[System.Collections.ArrayList]$GuardLog = @()
 foreach ($Day in $DaysOfLog)
 {
     $GuardLog += New-Object -TypeName PSObject -Property @{
@@ -43,21 +43,21 @@ foreach ($Day in $GuardLog)
     }
 }
 #region Part 1
-$GuardShifts = $GuardLog | Group-Object -Property Guard
-$WorstGuard = 0
-$AsleepRecord = 0
+[System.Collections.ArrayList]$GuardShifts = $GuardLog | Group-Object -Property Guard
+[System.Int32]$WorstGuard = 0
+[System.Int32]$AsleepRecord = 0
 foreach ($Guard in $Guardshifts)
 {
-    $MinutesAsleep = $Guard.group.time | Where-Object {$_ -eq 1} | measure -sum | select -expand sum
+    $MinutesAsleep = $Guard.group.time | Where-Object {$_ -eq 1} | Measure-Object -sum | Select-Object -expand sum
     if ($MinutesAsleep -gt $AsleepRecord)
     {
         $AsleepRecord = $MinutesAsleep
         $WorstGuard = $Guard.Name
     }
 }
-$WorstGuardShifts = ($GuardShifts | Where-Object -Property Name -eq $WorstGuard).Group
-$WorstMinute = 0
-$WorstScore = 0
+[System.Collections.ArrayList]$WorstGuardShifts = ($GuardShifts | Where-Object -Property Name -eq $WorstGuard).Group
+[System.Int32]$WorstMinute = 0
+[System.Int32]$WorstScore = 0
 for($min = 0; $min -lt 120; $min++)
 {
     $AsleepMin = $WorstGuardShifts | ForEach-Object -Process {$_.time[$min] | Where-Object -FilterScript {$_ -ge 0}} | Measure-Object -sum | Select-Object -ExpandProperty sum
@@ -67,12 +67,12 @@ for($min = 0; $min -lt 120; $min++)
         $WorstScore = $AsleepMin
     }
 }
-$Part1 = $WorstMinute * $WorstGuard
+[System.Int32]$Part1 = $WorstMinute * $WorstGuard
 #endregion
 #region Part 2
-$WorstGuard = 0
-$WorstMinute = 0
-$WorstScore = 0
+[System.Int32]$WorstGuard = 0
+[System.Int32]$WorstMinute = 0
+[System.Int32]$WorstScore = 0
 foreach ($GuardShift in $GuardShifts)
 {
     $WorstGuardMinute = 0
@@ -93,7 +93,7 @@ foreach ($GuardShift in $GuardShifts)
         $WorstScore = $WorstGuardScore
     }
 }
-$part2 = $WorstMinute * $WorstGuard
+[System.Int32]$part2 = $WorstMinute * $WorstGuard
 #endregion
 Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
 Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
