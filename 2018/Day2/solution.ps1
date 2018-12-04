@@ -17,7 +17,7 @@ foreach ($String in $inp)
 [System.Int32]$Part1 = $2count * $3count
 #endregion
 #region Part 2
-[System.Int32]$StringLength = $formattedlist[0].length
+[System.Int32]$StringLength = $inp[0].length
 :mainloop foreach ($string in $inp)
 {
     :testloop foreach ($TestString in ($inp | Where-object {$_ -ne $string}))
