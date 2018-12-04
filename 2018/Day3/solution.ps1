@@ -1,4 +1,5 @@
-﻿[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day3\input.txt
+﻿$start = get-date
+[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day3\input.txt
 [System.Collections.ArrayList]$formattedinput = $inp | Select-Object -Property @{N='Claim'; E = {[System.Int32](($_ -split ' ')[0] -replace '#')}},
                                 @{N='XStart'; E = {[System.Int32]($_ -split ' |,')[2]}},
                                 @{N='YStart'; E = {[System.Int32]($_ -split ' |,' -replace ':')[3]}},
@@ -21,7 +22,7 @@ foreach ($Claim in $FormattedInput)
 [System.Int32]$Part1 = ($Fabric | Where-Object -FilterScript {$_ -gt 1} | Measure-Object).Count
 #endregion
 #region Part 2
-foreach ($Claim in $FormattedInput)
+:fabricloop foreach ($Claim in $FormattedInput)
 {
     [System.Int32]$XEnd = $Claim.XStart + $Claim.XLength
     [System.Int32]$YEnd = $Claim.YStart + $Claim.YLength
@@ -33,14 +34,18 @@ foreach ($Claim in $FormattedInput)
             if ($Fabric[$x,$y] -gt 1)
             {
                 $Overlapping = $true
+                break fabricloop
             }
         }
     }
     if ($Overlapping -eq $false)
     {
         [System.Int32]$Part2 = $Claim.Claim
+        break fabricloop
     }
 }
 #endregion
 Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
 Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
+$end = get-date
+New-TimeSpan $start $end

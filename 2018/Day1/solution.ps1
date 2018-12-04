@@ -5,19 +5,20 @@
 #region Part 2
 [System.Boolean]$FrequencyFound = $false
 [System.Int32]$CurrentSum = 0
-[System.Collections.Hashtable]$NumberHash = @{}
+[System.Collections.ArrayList]$Seen = @()
 while (!$FrequencyFound)
 {
     :frequencyloop foreach ($Number in $Numbers)
     {
         $currentsum += $number
-        $numberhash.$currentsum += 1
-        if ($numberhash.$currentsum -gt 1)
+        #$numberhash.$currentsum += 1
+        if ($CurrentSum -in $Seen)
         {
             $FrequencyFound = $true
             $Part2 = $currentsum
             break frequencyloop
         }
+        $null = $Seen.Add($CurrentSum)
     }
 }
 #endregion
