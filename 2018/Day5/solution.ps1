@@ -1,11 +1,10 @@
-$inp = gc D:\day5.txt
+[System.String]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day5\input.txt
 [System.Collections.ArrayList]$chararray = [String[]][char[]]$inp
-$reactionsdone = $true
-$count = 0
+#region Part 1
+[System.Boolean]$reactionsdone = $true
 while ($reactionsdone)
 {
     $reactionsdone = $false
-    $count++
     for ($i =0;$i -lt $chararray.count;$i++)
     {
         switch -CaseSensitive -Regex ($chararray[$i])
@@ -31,10 +30,11 @@ while ($reactionsdone)
         }
     }
 }
-$Part1 = $chararray.count
-
-$bestLetter = "a"
-$bestscore = 50000
+[System.Int32]$Part1 = $chararray.count
+#endregion
+#region Part 2
+[System.String]$bestLetter = "a"
+[System.Int32]$bestscore = 50000
 foreach ($letter in (65..90|foreach-object{[char]$_}))
 {
     [System.Collections.ArrayList]$chararray = [String[]][char[]]($inp -replace "$letter")
@@ -74,4 +74,7 @@ foreach ($letter in (65..90|foreach-object{[char]$_}))
         $bestscore = $chararray.count
     }
 }
-$Part2 = $bestscore
+[System.Int32]$Part2 = $bestscore
+#endregion
+Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
