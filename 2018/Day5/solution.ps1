@@ -1,6 +1,7 @@
 [System.String]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day5\input.txt
 [System.Collections.ArrayList]$chararray = [String[]][char[]]$inp
 #region Part 1
+$part1start = get-date
 [System.Boolean]$reactionsdone = $true
 while ($reactionsdone)
 {
@@ -11,7 +12,7 @@ while ($reactionsdone)
         {
             '[A-Z]' 
             {
-                if ($Chararray[$i+1] -cmatch $chararray[$i].ToLower())
+                if ($Chararray[$i+1] -ceq $chararray[$i].ToLower())
                 {
                     $null = $chararray.RemoveRange($i,2)
                     $reactionsdone = $true
@@ -20,7 +21,7 @@ while ($reactionsdone)
             }
             '[a-z]'
             {
-                if ($Chararray[$i+1] -cmatch $chararray[$i].ToUpper())
+                if ($Chararray[$i+1] -ceq $chararray[$i].ToUpper())
                 {
                     $null = $chararray.RemoveRange($i,2)
                     $reactionsdone = $true
@@ -31,8 +32,10 @@ while ($reactionsdone)
     }
 }
 [System.Int32]$Part1 = $chararray.count
+$part1end = get-date
 #endregion
 #region Part 2
+$part2start = get-date
 [System.String]$bestLetter = "a"
 [System.Int32]$bestscore = 50000
 foreach ($letter in (65..90|foreach-object{[char]$_}))
@@ -49,7 +52,7 @@ foreach ($letter in (65..90|foreach-object{[char]$_}))
             {
                 '[A-Z]' 
                 {
-                    if ($Chararray[$i+1] -cmatch $chararray[$i].ToLower())
+                    if ($Chararray[$i+1] -ceq $chararray[$i].ToLower())
                     {
                         $null = $chararray.RemoveRange($i,2)
                         $reactionsdone = $true
@@ -58,7 +61,7 @@ foreach ($letter in (65..90|foreach-object{[char]$_}))
                 }
                 '[a-z]'
                 {
-                    if ($Chararray[$i+1] -cmatch $chararray[$i].ToUpper())
+                    if ($Chararray[$i+1] -ceq $chararray[$i].ToUpper())
                     {
                         $null = $chararray.RemoveRange($i,2)
                         $reactionsdone = $true
@@ -75,6 +78,7 @@ foreach ($letter in (65..90|foreach-object{[char]$_}))
     }
 }
 [System.Int32]$Part2 = $bestscore
+$part2end = get-date
 #endregion
-Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
-Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 1: $Part1 (Took $((New-TimeSpan -Start $part1start -End $part1end).Milliseconds) Milliseconds)" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 2: $Part2 (Took $((New-TimeSpan -Start $part2start -End $part2end).Seconds) Seconds)" -ForegroundColor Yellow
