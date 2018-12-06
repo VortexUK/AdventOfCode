@@ -10,7 +10,6 @@ foreach ($coordinate in $FormattedInput)
     $Coordinate.Y = $coordinate.Y - $YStats.Minimum
     $Coordinate | Add-Member -MemberType NoteProperty -Name 'Index' -Value $Count
     $Coordinate | Add-Member -MemberType NoteProperty -Name 'TileCount' -Value 0
-    $Coordinate | Add-Member -MemberType NoteProperty -Name 'TileCount' -Value 0
     $Count++
     $null = $AdjustedInputs.Add($coordinate)
 }
