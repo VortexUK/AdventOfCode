@@ -27,14 +27,14 @@ foreach ($Claim in $FormattedInput)
     [System.Int32]$XEnd = $Claim.XStart + $Claim.XLength
     [System.Int32]$YEnd = $Claim.YStart + $Claim.YLength
     [System.Boolean]$Overlapping = $false
-    for ($x = $Claim.XStart; $x -lt $XEnd; $x++)
+    :claimloop for ($x = $Claim.XStart; $x -lt $XEnd; $x++)
     {
         for ($y = $Claim.YStart;$y -lt $YEnd; $y++)
         {
             if ($Fabric[$x,$y] -gt 1)
             {
                 $Overlapping = $true
-                break fabricloop
+                break claimloop
             }
         }
     }
