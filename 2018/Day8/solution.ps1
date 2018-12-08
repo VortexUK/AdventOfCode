@@ -1,5 +1,4 @@
 ﻿[System.Int32[]]$inp = (Get-Content -Path D:\git\AdventOfCode\2018\Day8\input.txt) -split '\s+'
-[System.Int32[]]$inp2 = '2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2' -split '\s+'
 #region Part 1
 [System.DateTime]$part1start = Get-date
 function Get-ChildNodeSum ($Array, $Index=0)
@@ -23,7 +22,7 @@ function Get-ChildNodeSum ($Array, $Index=0)
     }
     return $result
 }
-[System.Int32]$Part1 = (Get-ChildNodeSum -Array $inp -Index 0 -ChildNodes $inp[0] -MetaDataCount $inp[1]).Sum
+[System.Int32]$Part1 = (Get-ChildNodeSum -Array $inp -Index 0).Sum
 [System.DateTime]$Part1End = Get-Date
 #endregion
 #region Part 2
