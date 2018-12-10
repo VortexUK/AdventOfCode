@@ -1,9 +1,9 @@
-[System.String[]]$inp = Get-Content -Path \\czxbenm1\d$\day6.txt
-$FormattedInput = $inp | Select-Object -Property @{N='X';E = {[System.Int32]($_ -split ', ')[0].Trim()}},@{N='Y';E = {[System.Int32]($_ -split ', ')[1].Trim()}}
-$XStats = $FormattedInput.X | Measure-Object -Minimum -Maximum
-$YStats = $FormattedInput.Y | Measure-Object -Minimum -Maximum
+[System.String[]]$inp = Get-Content -Path D:\git\AdventofCode\2018\Day6\input.txt
+[System.Int32.Collections.ArrayList]$FormattedInput = $inp | Select-Object -Property @{N='X';E = {[System.Int32]($_ -split ', ')[0].Trim()}},@{N='Y';E = {[System.Int32]($_ -split ', ')[1].Trim()}}
+[Microsoft.PowerShell.Commands.GenericMeasureInfo]$XStats = $FormattedInput.X | Measure-Object -Minimum -Maximum
+[Microsoft.PowerShell.Commands.GenericMeasureInfo]$YStats = $FormattedInput.Y | Measure-Object -Minimum -Maximum
 [System.Collections.ArrayList]$AdjustedInputs = @()
-$Count = 0
+[System.Int32]$Count = 0
 foreach ($coordinate in $FormattedInput)
 {
     $Coordinate.X = $coordinate.X - $XStats.Minimum
@@ -17,8 +17,8 @@ function Get-ManhattanDistance($coordinate1,$coordinate2)
 {
     return ([System.Math]::Abs($coordinate1.X - $coordinate2.X) + [System.Math]::Abs($coordinate1.y - $coordinate2.y))
 }
-$Grid = New-Object -TypeName 'Object[,]' -ArgumentList ($XStats.Maximum - $Xstats.Minimum),($YStats.Maximum - $Ystats.Minimum)
-$Grid2 = New-Object -TypeName 'Object[,]' -ArgumentList ($XStats.Maximum - $Xstats.Minimum),($YStats.Maximum - $Ystats.Minimum)
+[System.Object[,]]$Grid = New-Object -TypeName 'Object[,]' -ArgumentList ($XStats.Maximum - $Xstats.Minimum),($YStats.Maximum - $Ystats.Minimum)
+[System.Object[,]]$Grid2 = New-Object -TypeName 'Object[,]' -ArgumentList ($XStats.Maximum - $Xstats.Minimum),($YStats.Maximum - $Ystats.Minimum)
 for($X=0;$x -lt ($XStats.Maximum- $Xstats.Minimum); $x++)
 {
     $x
@@ -45,7 +45,6 @@ for($X=0;$x -lt ($XStats.Maximum- $Xstats.Minimum); $x++)
     }
 }
 #region Part 1
-
 [System.Collections.ArrayList]$InfiniteCoords = @()
 for ($x = 0; $x -lt ($XStats.Maximum - $Xstats.Minimum); $x++)
 {
@@ -57,16 +56,15 @@ for ($y = 0; $y -lt ($YStats.Maximum - $Ystats.Minimum); $Y++)
     $null = $InfiniteCoords.Add(($Grid[0,$y]))
     $null = $InfiniteCoords.Add(($Grid[($XStats.Maximum - $Xstats.Minimum -1),$y]))
 }
-$InfiniteCoords = $InfiniteCoords | Select-Object -Unique
+[System.Collections.ArrayList]$InfiniteCoords = $InfiniteCoords | Select-Object -Unique
 for ($i=0; $i -lt 50;$i++)
 {
     $AdjustedInputs[$i].TileCount = $Grid | Where-Object -FilterScript {$_ -eq $i} | Measure-Object | Select-Object -ExpandProperty Count
 }
-$Part1 = $AdjustedInputs | Where-Object -Property Index -notin $InfiniteCoords | Sort-Object -Property TileCount -Descending | Select-Object -first 1 -ExpandProperty TileCount
+[System.Int32]$Part1 = $AdjustedInputs | Where-Object -Property Index -notin $InfiniteCoords | Sort-Object -Property TileCount -Descending | Select-Object -first 1 -ExpandProperty TileCount
 #endregion
-
 #region Part 2
-$Part2 = $Grid2 | Where-Object -FilterScript {$_ -lt 10000} | Measure-Object | Select-Object -ExpandProperty Count
+[System.Int32]$Part2 = $Grid2 | Where-Object -FilterScript {$_ -lt 10000} | Measure-Object | Select-Object -ExpandProperty Count
 #endregion
 Write-Host -Object "Answer to Part 1: $Part1" -ForegroundColor Yellow
 Write-Host -Object "Answer to Part 2: $Part2" -ForegroundColor Yellow
