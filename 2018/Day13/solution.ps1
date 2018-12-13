@@ -1,4 +1,4 @@
-[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\Day13\input.txt
+[System.String[]]$inp = Get-Content -Path \\czxbenm1\d$\day13.txt
 $MineCarts = @()
 $MineCartMatcher = [Regex]::New('\<|\>|\^|v')
 $lineindex = 0
@@ -13,6 +13,42 @@ class MineCart
     [System.Int32]$MoveY = 0
     [System.String]$Direction = ''
     [System.String]$NextTurn = 'Left'
+    hidden [System.Collections.Hashtable]$CornerChange = @{
+        '\' = @{
+            'South' = 'East'
+            'North' = 'West'
+            'East' = 'South'
+            'West' = 'North'
+        }
+        '/' =  @{
+            'South' = 'West'
+            'North' = 'East'
+            'East' = 'North'
+            'West' = 'South'
+        }
+    }
+    hidden [System.Collections.Hashtable]$CrossingChange = @{
+        'North' = @{
+            'Left' = 'West'
+            'Straight' = 'North'
+            'Right' = 'East'
+        }
+        'South' = @{
+            'Left' = 'East'
+            'Straight' = 'South'
+            'Right' = 'West'
+        }
+        'East' = @{
+            'Left' = 'North'
+            'Straight' = 'East'
+            'Right' = 'South'
+        }
+        'West' = @{
+            'Left' = 'South'
+            'Straight' = 'West'
+            'Right' = 'North'
+        }
+    }
 
     MineCart([System.Int32]$Index,[System.Int32]$Y,[System.Int32]$X,[System.String]$Arrow)
     {
@@ -70,6 +106,27 @@ class MineCart
             $this.JunctionChange()
         }
     }
+
+    [System.String] Move ($Instruction)
+    {
+        switch -regex ($Instruction)
+        {
+            '\\|\/' 
+            {
+                $NewDirection = $this.CornerChange["$Instruction"]["$($this.Direction)"]
+                $this.ChangeDirection($NewDirection , $false)
+            }
+            '\+' 
+            {
+                $NewDirection = $this.CrossingChange["$($this.Direction)"]["$($this.NextTurn)"]
+                $this.ChangeDirection($NewDirection, $true)
+            }
+
+        }
+        $this.X += $this.MoveX
+        $this.Y += $this.MoveY
+        Return "$($this.Y)-$($this.X)"
+    }
 }
 
 foreach ($line in $inp)
@@ -84,61 +141,24 @@ foreach ($line in $inp)
     $lineindex++
 }
 $MineMap = $inp -replace '\<|\>','-' -replace '\^|v','|'
-$CornerChange = @{
-    '\' = @{
-        'South' = 'East'
-        'North' = 'West'
-        'East' = 'South'
-        'West' = 'North'
-    }
-    '/' =  @{
-        'South' = 'West'
-        'North' = 'East'
-        'East' = 'North'
-        'West' = 'South'
-    }
-}
-$CrossingChange = @{
-    'North' = @{
-        'Left' = 'West'
-        'Straight' = 'North'
-        'Right' = 'East'
-    }
-    'South' = @{
-        'Left' = 'East'
-        'Straight' = 'South'
-        'Right' = 'West'
-    }
-    'East' = @{
-        'Left' = 'North'
-        'Straight' = 'East'
-        'Right' = 'South'
-    }
-    'West' = @{
-        'Left' = 'South'
-        'Straight' = 'West'
-        'Right' = 'North'
-    }
-}
-function Move-MineCart($Cart,$MineMap)
+
+$NoCrash = $true
+while($NoCrash)
 {
-    $currentlocation = $MineMap[$Cart.Y][$Cart.X]
-
-    switch -regex ($currentlocation)
+    $CartLocations = @{}
+    foreach ($Cart in $Minecarts)
     {
-        '\\|\/' 
+        $Instruction = $MineMap[$Cart.Y][$Cart.X]
+        $NewLocation = $Cart.Move($Instruction)
+        if ($NewLocation -in $CartLocations.Values)
         {
-            $NewDirection = $CornerChange["$currentlocation"]["$($cart.Direction)"]
-            $Cart.ChangeDirection($NewDirection , $false)
+            $NoCrash = $false
+            $Part1 = $NewLocation
         }
-        '\+' 
+        else
         {
-            $NewDirection = $CrossingChange["$($cart.Direction)"]["$($Cart.NextTurn)"]
-            $Cart.ChangeDirection($NewDirection, $true)
+            $CartLocations["$($Cart.Index)"] = $NewLocation
         }
 
     }
-    $Cart.X += $Cart.MoveX
-    $Cart.Y += $Cart.MoveY
-    return $cart
 }
