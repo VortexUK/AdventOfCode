@@ -23,13 +23,12 @@ while ($recipenotfound)
     if (($state['Recipes'].Count - $RecipeCount -gt $inp ))
     {
         $RecipeNumber = $state['Recipes'][($inp)..($inp+9)]
-        $recipenotfound = $false
     }
     if ($indexcount % 10000 -eq 0)
     {
         $indexCount
-         $result = $matcher.matches(($state['Recipes'][($state['Recipes'].Count-20000)..($state['Recipes'].Count-1)] -join ''))
-        if ($null -eq $Result)
+        $result = $matcher.matches(($state['Recipes'][($state['Recipes'].Count-20000)..($state['Recipes'].Count-1)] -join ''))
+        if (($Result | Measure-Object).count -gt 0)
         {
             $recipenotfound = $false
         }
