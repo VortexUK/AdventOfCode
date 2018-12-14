@@ -1,5 +1,5 @@
-[System.String[]]$inp = Get-Content -Path \\czxbenm1\d$\day13.txt
-$MineCarts = @()
+[System.String[]]$inp = Get-Content -Path D:\git\AdventOfCode\2018\day13\input.txt
+[System.Collections.ArrayList]$MineCarts = @()
 $MineCartMatcher = [Regex]::New('\<|\>|\^|v')
 $lineindex = 0
 $MineCartCount = 0
@@ -7,12 +7,14 @@ $MineCartCount = 0
 class MineCart
 {
     [System.Int32]$Index
+    [System.String]$Location =""
     [System.Int32]$Y = 0
-    [System.Int32]$MoveX = 0
     [System.Int32]$X = 0
+    [System.Int32]$MoveX = 0
     [System.Int32]$MoveY = 0
     [System.String]$Direction = ''
     [System.String]$NextTurn = 'Left'
+    [System.Boolean]$Crashed = $false
     hidden [System.Collections.Hashtable]$CornerChange = @{
         '\' = @{
             'South' = 'East'
@@ -53,8 +55,7 @@ class MineCart
     MineCart([System.Int32]$Index,[System.Int32]$Y,[System.Int32]$X,[System.String]$Arrow)
     {
         $this.Index = $Index
-        $this.Y = $Y
-        $this.X = $X
+        $this.SetLocation($X, $Y)
         switch ($Arrow)
         {
             'V' {
@@ -106,8 +107,13 @@ class MineCart
             $this.JunctionChange()
         }
     }
-
-    [System.String] Move ($Instruction)
+    [void] SetLocation($X, $Y)
+    {
+        $this.X = $X
+        $this.Y = $Y
+        $this.Location = $X,$Y -join ','
+    }
+    [void] Move ($Instruction)
     {
         switch -regex ($Instruction)
         {
@@ -123,9 +129,7 @@ class MineCart
             }
 
         }
-        $this.X += $this.MoveX
-        $this.Y += $this.MoveY
-        Return "$($this.Y)-$($this.X)"
+        $this.SetLocation(($this.X+$this.MoveX),($this.Y+$this.MoveY))
     }
 }
 
@@ -136,29 +140,48 @@ foreach ($line in $inp)
     {
         $Minecartcount++
         $MineCart = [MineCart]::New($Minecartcount,$lineindex,$Match.Index,$Match.Value)
-        $MineCarts += $Minecart
+        $null = $MineCarts.Add($Minecart)
     }
     $lineindex++
 }
 $MineMap = $inp -replace '\<|\>','-' -replace '\^|v','|'
 
 $NoCrash = $true
+$iterations = 0
+$Firstcrash = $true
 while($NoCrash)
 {
-    $CartLocations = @{}
-    foreach ($Cart in $Minecarts)
+    $iterations++
+    :cartloop foreach ($Cart in $MineCarts)
     {
-        $Instruction = $MineMap[$Cart.Y][$Cart.X]
-        $NewLocation = $Cart.Move($Instruction)
-        if ($NewLocation -in $CartLocations.Values)
+        if ($Cart.Crashed -eq $false)
         {
-            $NoCrash = $false
-            $Part1 = $NewLocation
+            $Instruction = $MineMap[$Cart.Y][$Cart.X]
+            $Cart.Move($Instruction)
+            $MineCartCrash = $MineCarts | Where-Object {$_.Location -EQ $Cart.Location -and $_.Crashed -eq $false}
+            if (($MineCartCrash | Measure-Object).Count -ge 2 )
+            {
+                if ($Firstcrash -eq $true)
+                {
+                    $Part1 = $Cart.Location
+                    $Firstcrash = $false
+                }
+                #$CartsToRemove = $MineCarts | Where-Object -Property Location -eq $MineCarts[$CartIndex].Location
+                foreach ($CrashedCart in $MineCartCrash)
+                {
+                    Write-Host "Removing $($CrashedCart.Index)"
+                    $CrashedCart.Crashed = $true
+                }
+                $Cart.Location
+            }
+            if(($MineCarts | Measure-Object).Count -eq 1)
+            {
+                $NoCrash = $false
+                $Part2 = $Cart.Location
+                break cartloop
+            }
         }
-        else
-        {
-            $CartLocations["$($Cart.Index)"] = $NewLocation
-        }
-
     }
+    $MineCarts = @($MineCarts | Where {$_.Crashed -eq $false} | Sort-Object -Property Y,X)
 }
+$Part1
