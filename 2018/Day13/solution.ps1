@@ -145,7 +145,8 @@ foreach ($line in $inp)
     $lineindex++
 }
 $MineMap = $inp -replace '\<|\>','-' -replace '\^|v','|'
-
+$Part1Start = Get-Date
+$Part2Start = Get-Date
 $NoCrash = $true
 $iterations = 0
 $Firstcrash = $true
@@ -165,14 +166,13 @@ while($NoCrash)
                 {
                     $Part1 = $Cart.Location
                     $Firstcrash = $false
+                    $Part1End = Get-Date
                 }
                 #$CartsToRemove = $MineCarts | Where-Object -Property Location -eq $MineCarts[$CartIndex].Location
                 foreach ($CrashedCart in $MineCartCrash)
                 {
-                    Write-Host "Removing $($CrashedCart.Index)"
                     $CrashedCart.Crashed = $true
                 }
-                $Cart.Location
             }
             if(($MineCarts | Measure-Object).Count -eq 1)
             {
@@ -184,4 +184,6 @@ while($NoCrash)
     }
     $MineCarts = @($MineCarts | Where {$_.Crashed -eq $false} | Sort-Object -Property Y,X)
 }
-$Part1
+$Part2End = Get-Date
+Write-Host -Object "Answer to Part 1: $Part1 (Took $((New-TimeSpan -Start $part1start -End $Part1End).TotalMilliseconds) Milliseconds)" -ForegroundColor Yellow
+Write-Host -Object "Answer to Part 2: $Part2 (Took $((New-TimeSpan -Start $Part2Start -End $part2end).TotalSeconds) Seconds)" -ForegroundColor Yellow
